@@ -1,0 +1,20 @@
+import subprocess
+from telegram.ext import Updater, CommandHandler
+
+def run_script(update, context):
+    # Extract the script name from the command
+    script_name = context.args[0]
+    # Execute the script from GitHub using subprocess
+    result = subprocess.run(["bash", "-c", f"curl -sSL https://raw.githubusercontent.com/your_username/your_repo/main/{script_name} | bash -s"], capture_output=True, text=True, input=context.args[1])
+    # Send the result back to the user
+    update.message.reply_text(result.stdout)
+
+def main():
+    updater = Updater("6441417129:AAHGSFQbdz4RJOY1WLzmyMYEJ4gyd1C6d3w", use_context=True)
+    dp = updater.dispatcher
+    dp.add_handler(CommandHandler("runscript", run_script))
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
